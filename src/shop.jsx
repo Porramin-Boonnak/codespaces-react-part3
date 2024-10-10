@@ -1,5 +1,6 @@
 import './shop.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 const Item=(props)=>{
     return (<div key={props.id} onClick={()=>props.callback(props)}>
         <img src={props.img} width={200} height={200}/><br/>
@@ -9,13 +10,18 @@ const Item=(props)=>{
     </div>)
 }
 export default function Shop(){
-    const products=[
-        {id:0,name:"Notebook AcerSwift",price:45900,img:"https://img.advice.co.th/images_nas/pic_product4/A0147295/A0147295_s.jpg"},
-        {id:1,name:"Notebook AsusVivo",price:19900,img:"https://img.advice.co.th/images_nas/pic_product4/A0146010/A0146010_s.jpg"},
-        {id:2,name:"Notebook LenovoIdeapad",price:32900,img:"https://img.advice.co.th/images_nas/pic_product4/A0149009/A0149009_s.jpg"},
-        {id:3,name:"Notebook MSIPrestige",price:54900,img:"https://img.advice.co.th/images_nas/pic_product4/A0149954/A0149954_s.jpg"},
-        {id:4,name:"Notebook DELLXPS",price:99900,img:"https://img.advice.co.th/images_nas/pic_product4/A0146335/A0146335_s.jpg"},
-        {id:5,name:"Notebook HPEnvy",price:46900,img:"https://img.advice.co.th/images_nas/pic_product4/A0145712/A0145712_s.jpg"}];
+        const [products,setProducts] = useState([])
+        const url = "https://redesigned-goggles-44vrj4v4q9rfqp4j-5000.app.github.dev";
+        useEffect(()=>{
+            axios.get(url+'/api/products').then(response=>{
+                setProducts(response.data);
+            }).catch(error=>{
+                console.log("error");
+            });
+            return ()=>{
+
+            }
+        },[])
         const productlist=products.map(item=><Item {...item} callback={addCart}/>)
         const [cart,setcart]=useState([]);
         const totalPrice = cart.reduce((total, item) => total + item.price, 0);
